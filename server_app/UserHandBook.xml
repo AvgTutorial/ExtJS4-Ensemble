@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2014.2 (Build 372U)" ts="2014-11-28 12:20:01">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2014.2 (Build 372U)" ts="2014-12-02 11:43:37">
 <Class name="uh.dao.AbstractDAO">
 <Description>
 Абстрактный класс, описывающий CRUD-операции над сущностями в БД</Description>
 <Import>uh.dto.msg,uh.util</Import>
 <Super>%RegisteredObject</Super>
-<TimeChanged>63515,41231.925028</TimeChanged>
+<TimeChanged>63520,69659.889249</TimeChanged>
 <TimeCreated>63509,59691.73482</TimeCreated>
 
 <Method name="execute">
 <Description>
-Шаблонный метод для создания/удаления/редактирования конкретной сущности в БД
+Шаблонный метод для создания/удаления/редактирования конкретной записи в БД
 @param methodName {String} - valueList(PERSIST,MERGE,REMOVE)
 @param dto {Object}
 @return uh.dto.msg.Result {Object}</Description>
@@ -29,13 +29,13 @@
     set resultMsg =##class(Result).%New()
     try{    
         if (methodName="PERSIST"){
-            //вызов метода создания новой сущности в БД 
+            //вызов метода создания новой записи в БД 
             set sc=..save(dto)          
         }elseif(methodName="MERGE"){
-            //вызов метода редактирования сущности в БД             
+            //вызов метода редактирования записи в БД             
             set sc=..update(dto)
         }elseif(methodName="REMOVE"){
-            //вызов метода удаления сущности с БД   
+            //вызов метода удаления записи с БД   
             set sc=..delete(dto)            
         }else{          
             set error=##class(%Exception.General).%New("Ошибка вызова метода - execute")            
@@ -45,7 +45,7 @@
         //коммит транзакции
         tcommit         
         
-        //заполнение результирующего DTO-объекта
+        //инициализация DTO-объекта
         set resultMsg=##class(ResultFactory).getResult(sc)  
     
         //если метод save вернул статус выполнения 0, выкидываем исключение с текстом ошибки
@@ -68,7 +68,7 @@
 
 <Method name="persist">
 <Description>
-Метод создания новой сущности в БД
+Метод создания новой записи в БД
 @param dto {Object}
 @return uh.dto.msg.Result {Object}</Description>
 <Final>1</Final>
@@ -81,7 +81,7 @@
 
 <Method name="merge">
 <Description>
-Метод изменения состояния сущности в БД
+Метод редактирования записи в БД
 @param dto {Object}
 @return uh.dto.msg.Result {Object}</Description>
 <Final>1</Final>
@@ -94,7 +94,7 @@
 
 <Method name="remove">
 <Description>
-Метод удаления сущности с БД
+Метод удаления записи с БД
 @param dto {Object}
 @return uh.dto.msg.Result {Object}</Description>
 <Final>1</Final>
@@ -107,7 +107,7 @@
 
 <Method name="findAll">
 <Description>
-Метод поиска сущностей в БД
+Метод поиска записей в БД
 @param dto {Object}
 @return uh.dto.msg.Result {Object}</Description>
 <Final>1</Final>
@@ -118,7 +118,7 @@
     tstart
     set resultMsg =##class(Result).%New()
     try{    
-        //вызов метода поиска сущностей в БД    
+        //вызов метода поиска записей в БД    
         set sql=..getAllRecord()
         tcommit 
         set resultMsg=##class(ResultFactory).getResultList(sql,pagination)                                      
@@ -134,7 +134,7 @@
 
 <Method name="save">
 <Description>
-Реализация метода создания новой сущности в БД
+Реализация метода создания новой записи в БД
 МЕТОД ДОЛЖЕН БЫТЬ ПЕРЕОПРЕДЕЛЕН ДЛЯ КАЖДОЙ КОНКРЕТНОЙ СУЩНОСТИ
 @param dto {Object}
 @return %Status {Object}    </Description>
@@ -146,7 +146,7 @@
 
 <Method name="update">
 <Description>
-Реализация метода изменения состояния  сущности в БД
+Реализация метода редактирования записи в БД
 МЕТОД ДОЛЖЕН БЫТЬ ПЕРЕОПРЕДЕЛЕН ДЛЯ КАЖДОЙ КОНКРЕТНОЙ СУЩНОСТИ
 @param dto {Object}
 @return %Status {Object}</Description>
@@ -158,7 +158,7 @@
 
 <Method name="delete">
 <Description>
-Реализация метода удаления  сущности с БД
+Реализация метода удаления записи с БД
 МЕТОД ДОЛЖЕН БЫТЬ ПЕРЕОПРЕДЕЛЕН ДЛЯ КАЖДОЙ КОНКРЕТНОЙ СУЩНОСТИ
 @param dto {Object}
 @return %Status {Object}</Description>
@@ -170,7 +170,7 @@
 
 <Method name="getAllRecord">
 <Description>
-Реализация метода поиска сущностей в БД
+Реализация метода поиска записей в БД
 МЕТОД ДОЛЖЕН БЫТЬ ПЕРЕОПРЕДЕЛЕН ДЛЯ КАЖДОЙ КОНКРЕТНОЙ СУЩНОСТИ
 @return {String} - sql выражение</Description>
 <Abstract>1</Abstract>
@@ -262,6 +262,8 @@ TableName - uh.data.Users </Description>
 </Class>
 
 
+
+
 <Class name="uh.data.Users">
 <Description>
 Хранимы класс, содержащий необходимые поля для сущности User</Description>
@@ -323,6 +325,8 @@ Email</Description>
 </Data>
 </Storage>
 </Class>
+
+
 
 
 <Class name="uh.dto.User">
@@ -475,12 +479,12 @@ Result DTO</Description>
 Фабрика управления объектом ResultDTO</Description>
 <Import>uh.dto.msg,uh.util</Import>
 <Super>%RegisteredObject</Super>
-<TimeChanged>63515,44025.182992</TimeChanged>
+<TimeChanged>63520,70394.033276</TimeChanged>
 <TimeCreated>63508,84217.448263</TimeCreated>
 
 <Method name="getResult">
 <Description>
-Метод возвращает uh.dto.msg.Result в соответствии со статусом выполнения действия</Description>
+Метод возвращает объект uh.dto.msg.Result в соответствии со статусом выполнения действия</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>sc:%Status</FormalSpec>
 <ReturnType>Result</ReturnType>
@@ -515,18 +519,20 @@ Result DTO</Description>
 </Class>
 
 
+
+
 <Class name="uh.service.AbstractService">
 <Description>
-Абстрактный класс, определяющий общие методы бизнес-уровня</Description>
+Абстрактный класс, определяющий методы бизнес-уровня</Description>
 <Abstract>1</Abstract>
 <Import>uh.dto.msg</Import>
 <Super>%RegisteredObject</Super>
-<TimeChanged>63515,58305.214504</TimeChanged>
+<TimeChanged>63520,61291.126026</TimeChanged>
 <TimeCreated>63509,1937.448623</TimeCreated>
 
 <Method name="persist">
 <Description>
-Метод создания новой сущности 
+Метод создания новой записи в БД 
 @param dto {Object}
 @return {String}</Description>
 <Abstract>1</Abstract>
@@ -537,7 +543,7 @@ Result DTO</Description>
 
 <Method name="merge">
 <Description>
-Метод редактирования сущности 
+Метод редактирования записи в БД
 @param dto {Object}
 @return {String}</Description>
 <Abstract>1</Abstract>
@@ -548,7 +554,7 @@ Result DTO</Description>
 
 <Method name="remove">
 <Description>
-Метод удаления сущности 
+Метод удаления записи с БД
 @param dto {Object}
 @return {String}</Description>
 <Abstract>1</Abstract>
@@ -559,7 +565,7 @@ Result DTO</Description>
 
 <Method name="findAll">
 <Description>
-Метод поиска сущностей
+Метод поиска записей в БД
 @param pagination {Object}
 @return {String}</Description>
 <Abstract>1</Abstract>
@@ -570,7 +576,7 @@ Result DTO</Description>
 
 <Method name="newResult">
 <Description>
-Метод создания результирующего объекта - ResultDTO</Description>
+Метод создания объекта Result</Description>
 <Final>1</Final>
 <ClassMethod>1</ClassMethod>
 <ReturnType>Result</ReturnType>
@@ -582,10 +588,10 @@ Result DTO</Description>
 
 <Class name="uh.service.UserService">
 <Description>
-Конкретный класс, реализующий бизнес-логику при создании/редактировании/удалении/поиске сущности Users</Description>
+Класс, реализующий бизнес-логику при создании/редактировании/удалении/поиске записей в таблице Users</Description>
 <Import>uh.dto.msg,uh.dao</Import>
 <Super>uh.service.AbstractService</Super>
-<TimeChanged>63515,58275.291405</TimeChanged>
+<TimeChanged>63520,60756.194078</TimeChanged>
 <TimeCreated>63509,62506.146204</TimeCreated>
 
 <Method name="findAll">
@@ -644,6 +650,8 @@ Result DTO</Description>
 ]]></Implementation>
 </Method>
 </Class>
+
+
 
 
 <Class name="uh.test.Populator">
@@ -725,25 +733,32 @@ Result DTO</Description>
 
 
 <Class name="uh.util.Log">
+<Description>
+Простой класс для логирования</Description>
 <Super>%RegisteredObject</Super>
-<TimeChanged>63511,62279.895966</TimeChanged>
+<TimeChanged>63520,79651.272806</TimeChanged>
 <TimeCreated>63508,84340.673255</TimeCreated>
 
 <Method name="debug">
+<Description>
+метод записывает в глобал текст ошибки</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>ex:%Exception.AbstractException</FormalSpec>
-<Implementation><![CDATA[	s ^glbError($zdt($h,3))=ex.Name
+<Implementation><![CDATA[    s ^glbError($zdt($h,3))=ex.Name
 ]]></Implementation>
 </Method>
 
 <Method name="getErrorText">
+<Description>
+метод возвращает текст ошибки 
+@param sc {Object} - %Status</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>sc</FormalSpec>
 <Implementation><![CDATA[
-	s text = $P($System.Status.GetOneErrorText(sc),">",1)
-	s text = $REPLACE(text,"""","\""")
-	s text = $REPLACE(text,$C(13,10),"\n")
-	q " "_text
+    s text = $P($System.Status.GetOneErrorText(sc),">",1)
+    s text = $REPLACE(text,"""","\""")
+    s text = $REPLACE(text,$C(13,10),"\n")
+    q " "_text
 ]]></Implementation>
 </Method>
 </Class>
@@ -753,7 +768,7 @@ Result DTO</Description>
 <Description>
 Класс для генерации JSON</Description>
 <Super>%RegisteredObject</Super>
-<TimeChanged>63516,54519.68939</TimeChanged>
+<TimeChanged>63520,77752.393832</TimeChanged>
 <TimeCreated>63509,43729.381618</TimeCreated>
 
 <Property name="jsonStart">
@@ -846,7 +861,7 @@ Result DTO</Description>
 
 <Method name="convertRSToJson">
 <Description>
-Метод серилизирует %ResultSet в JSON строку</Description>
+Метод сериализирует %ResultSet в JSON строку</Description>
 <FormalSpec>rs:%ResultSet</FormalSpec>
 <Private>1</Private>
 <ReturnType>%String</ReturnType>
@@ -904,77 +919,99 @@ Result DTO</Description>
 </Class>
 
 
+
+
 <Class name="uh.util.query.QueryBuilder">
+<Description>
+Класс для подготовки и выполнения SQL выражений</Description>
 <Super>%RegisteredObject</Super>
-<TimeChanged>63509,43524.837078</TimeChanged>
+<TimeChanged>63520,79173.516155</TimeChanged>
 <TimeCreated>63509,43524.837078</TimeCreated>
 
 <Property name="sql">
+<Description>
+sql выражение</Description>
 </Property>
 
 <Property name="start">
+<Description>
+пагинация: "с"</Description>
 </Property>
 
 <Property name="limit">
+<Description>
+пагинация: "по"</Description>
 </Property>
 
 <Method name="buildSQL">
+<Description>
+метод формирует конечное sql выражение</Description>
 <FormalSpec>onlyCount:%Boolean=0</FormalSpec>
 <ReturnType>%String</ReturnType>
 <Implementation><![CDATA[
-	if (onlyCount=1){
-		quit "select count(1) as cnt from ("_..sql_")"
-	}else{
-		set vid=..start
-		quit "select * from ( select top "_(..start+..limit)_" * from ("_..sql_")) where  %vid >"_vid		
-	}
+    if (onlyCount=1){
+        //посчитать  кол-во записей в таблице
+        quit "select count(1) as cnt from ("_..sql_")"
+    }else{
+        set vid=..start
+        // вернуть порцию данных "с"- "по"
+        quit "select * from ( select top "_(..start+..limit)_" * from ("_..sql_")) where  %vid >"_vid       
+    }
 ]]></Implementation>
 </Method>
 
 <Method name="run">
+<Description>
+метод подготавливает и выполняет sql выражение</Description>
 <FormalSpec>onlyCount:%Boolean=0</FormalSpec>
 <ReturnType>%SQL.StatementResult</ReturnType>
 <Implementation><![CDATA[
-	s sql=""
-	
-	if (onlyCount=1){
-		set sql=..buildSQL(1)		
-	}else{		
-		set sql=..buildSQL()		
-	}
-	set rs = ##class(%ResultSet).%New("%DynamicQuery:SQL")
-    	set sc = rs.Prepare(sql)
-    	set sc=rs.Execute()    		
-    	throw:$system.Status.IsError(sc) ##class(%Exception.General).%New($System.Status.GetOneErrorText(sc))	
-	quit rs
+    s sql=""
+    
+    if (onlyCount=1){
+        set sql=..buildSQL(1)       
+    }else{      
+        set sql=..buildSQL()        
+    }
+    set rs = ##class(%ResultSet).%New("%DynamicQuery:SQL")
+        set sc = rs.Prepare(sql)
+        set sc=rs.Execute()         
+        throw:$system.Status.IsError(sc) ##class(%Exception.General).%New($System.Status.GetOneErrorText(sc))   
+    quit rs
 ]]></Implementation>
 </Method>
 
 <Method name="count">
+<Description>
+метод возвращает кол-во записей в таблице</Description>
 <Implementation><![CDATA[
-	set rs=..run(1)
-	do rs.%Next()
-	set cnt = rs.cnt
-	quit cnt
+    set rs=..run(1)
+    do rs.%Next()
+    set cnt = rs.cnt
+    quit cnt
 ]]></Implementation>
 </Method>
 
 <Method name="%OnNew">
+<Description>
+конструктор</Description>
 <FormalSpec>sql:%String,pagination:uh.util.query.dto.Pagination</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set ..sql=sql
-	set ..start=pagination.start
-	set ..limit=pagination.limit
-	Quit $$$OK
+    set ..sql=sql
+    set ..start=pagination.start
+    set ..limit=pagination.limit
+    Quit $$$OK
 ]]></Implementation>
 </Method>
 </Class>
 
 
 <Class name="uh.util.query.dto.Pagination">
+<Description>
+DTO для передачи в sql границ выборки данных</Description>
 <Super>%RegisteredObject</Super>
-<TimeChanged>63509,2310.015258</TimeChanged>
+<TimeChanged>63520,79419.030709</TimeChanged>
 <TimeCreated>63509,2258.137719</TimeCreated>
 
 <Property name="start">
@@ -992,9 +1029,11 @@ Result DTO</Description>
 
 
 <Class name="uh.web.AbstractHandler">
+<Description>
+Абстрактный класс, определяющий CRUD-операции над сущностями в БД</Description>
 <Abstract>1</Abstract>
 <Super>HttpServlet</Super>
-<TimeChanged>63509,63554.747088</TimeChanged>
+<TimeChanged>63520,81534.60132</TimeChanged>
 <TimeCreated>63509,63486.182903</TimeCreated>
 
 <Method name="doPost">
@@ -1005,24 +1044,32 @@ Result DTO</Description>
 </Method>
 
 <Method name="findAll">
+<Description>
+Метод поиска записей в БД</Description>
 <Abstract>1</Abstract>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>request:%CSP.Request,response:%CSP.Response</FormalSpec>
 </Method>
 
 <Method name="persist">
+<Description>
+Метод создания новой записи в БД</Description>
 <Abstract>1</Abstract>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>request:%CSP.Request,response:%CSP.Response</FormalSpec>
 </Method>
 
 <Method name="merge">
+<Description>
+Метод редактирования записи в БД</Description>
 <Abstract>1</Abstract>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>request:%CSP.Request,response:%CSP.Response</FormalSpec>
 </Method>
 
 <Method name="remove">
+<Description>
+Метод удаления записи с БД</Description>
 <Abstract>1</Abstract>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>request:%CSP.Request,response:%CSP.Response</FormalSpec>
@@ -1031,8 +1078,10 @@ Result DTO</Description>
 
 
 <Class name="uh.web.HttpServlet">
+<Description>
+Простой сервлет обрабатывающий запросы от клиента</Description>
 <Super>%CSP.Page</Super>
-<TimeChanged>63515,58100.923023</TimeChanged>
+<TimeChanged>63520,80729.324728</TimeChanged>
 <TimeCreated>63508,53871.529137</TimeCreated>
 
 <Parameter name="HTTPINTERNALSERVERERROR">
@@ -1065,20 +1114,20 @@ Result DTO</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	s sc = $$$OK
-	
-	#dim %request As %CSP.Request
-	#dim %response As %CSP.Response
-	
-	try {
-		if (%request.Method = "POST") d ..doPost(%request,%response)		
-	}
-	catch ex {
-		#dim ex as %Exception.AbstractException 		
-		s sc=ex.AsStatus()
-		d ..setResponseError("ServerError",ex)		
-	}	
-	quit sc
+    s sc = $$$OK
+    
+    #dim %request As %CSP.Request
+    #dim %response As %CSP.Response
+    
+    try {
+        if (%request.Method = "POST") d ..doPost(%request,%response)        
+    }
+    catch ex {
+        #dim ex as %Exception.AbstractException         
+        s sc=ex.AsStatus()
+        d ..setResponseError("ServerError",ex)      
+    }   
+    quit sc
 ]]></Implementation>
 </Method>
 
@@ -1086,16 +1135,16 @@ Result DTO</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Boolean</ReturnType>
 <Implementation><![CDATA[
-	#dim %request as %CSP.Request
-	#dim %response as %CSP.Response
-		
-	if (%request.Method = "POST") {
-		s %response.ContentType = ..#JSCONTENTTYPE
-		quit 1
-	}		
-	s %response.Status = ..#HTTPERRORNOTIMPLEMENTED
+    #dim %request as %CSP.Request
+    #dim %response as %CSP.Response
+        
+    if (%request.Method = "POST") {
+        s %response.ContentType = ..#JSCONTENTTYPE
+        quit 1
+    }       
+    s %response.Status = ..#HTTPERRORNOTIMPLEMENTED
 
-	quit 0
+    quit 0
 ]]></Implementation>
 </Method>
 
@@ -1110,26 +1159,29 @@ Template method для обработки POST команд</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>text="",ex:%Exception.AbstractException="",type=""</FormalSpec>
 <Implementation><![CDATA[
-	s code="", name="",data=""
-	if ($isobject(ex)){
-		s code=$tr(ex.Name,"<>","")
-		s data=ex.Data_" "_ex.Location
-	}
-	
-	&html<{"success": false,"type": "#(type)#","message": "#(text)#","code": "#(code)#","data": "#(data)#"}>
+    s code="", name="",data=""
+    if ($isobject(ex)){
+        s code=$tr(ex.Name,"<>","")
+        s data=ex.Data_" "_ex.Location
+    }
+    
+    &html<{"success": false,"type": "#(type)#","message": "#(text)#","code": "#(code)#","data": "#(data)#"}>
 ]]></Implementation>
 </Method>
 </Class>
 
 
 <Class name="uh.web.UserHandler">
+<Description>
+Класс реализующий CRUD-операции над сущностью Users </Description>
 <Import>uh.util.json,uh.service</Import>
 <Super>AbstractHandler</Super>
-<TimeChanged>63515,58569.85006</TimeChanged>
+<TimeChanged>63520,81671.378353</TimeChanged>
 <TimeCreated>63509,62882.295304</TimeCreated>
 
 <Method name="doPost">
 <Description>
+@Override
 метод для обработки POST команд</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>request:%CSP.Request,response:%CSP.Response</FormalSpec>
@@ -1151,6 +1203,8 @@ Template method для обработки POST команд</Description>
 </Method>
 
 <Method name="findAll">
+<Description>
+@Override</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>request:%CSP.Request,response:%CSP.Response</FormalSpec>
 <Implementation><![CDATA[
@@ -1165,6 +1219,8 @@ Template method для обработки POST команд</Description>
 </Method>
 
 <Method name="persist">
+<Description>
+@Override</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>request:%CSP.Request,response:%CSP.Response</FormalSpec>
 <Implementation><![CDATA[
@@ -1174,6 +1230,8 @@ Template method для обработки POST команд</Description>
 </Method>
 
 <Method name="merge">
+<Description>
+@Override</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>request:%CSP.Request,response:%CSP.Response</FormalSpec>
 <Implementation><![CDATA[
@@ -1183,6 +1241,8 @@ Template method для обработки POST команд</Description>
 </Method>
 
 <Method name="remove">
+<Description>
+@Override</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>request:%CSP.Request,response:%CSP.Response</FormalSpec>
 <Implementation><![CDATA[
@@ -1205,4 +1265,6 @@ Template method для обработки POST команд</Description>
 ]]></Implementation>
 </Method>
 </Class>
+
+
 </Export>
